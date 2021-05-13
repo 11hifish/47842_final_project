@@ -22,7 +22,7 @@ args = parser.parse_args()
 num_machines = args.machines
 k = args.k
 eps = args.eps
-gamma = args.gama
+gamma = args.gamma
 data_name = args.data
 expno = args.expno
 
