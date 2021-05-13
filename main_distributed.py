@@ -20,7 +20,7 @@ P = even_split_data(X, num_machines)
 
 # get min dist, max dist
 D = distance_matrix(X, X)
-D = D + np.eye(np.inf)
+D = D + np.eye(X.shape[0]) * np.inf
 min_dist = np.min(D)
 max_dist = np.max(D)
 # get all possible 2OPTs
