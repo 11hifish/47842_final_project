@@ -3,7 +3,7 @@ ray.init(address='auto', _redis_password='5241590000000000')
 from distributed_k_center import construct_tester, prune
 import numpy as np
 from utils import *
-from greedy_k_center import greedy_k_center
+from greedy_k_center import greedy_k_center, distance_to_center
 from scipy.spatial import distance_matrix
 import pickle
 
@@ -20,9 +20,10 @@ P = even_split_data(X, num_machines)
 
 # get min dist, max dist
 D = distance_matrix(X, X)
-D = D + np.eye(X.shape[0]) * np.inf
-min_dist = np.min(D)
 max_dist = np.max(D)
+D = D + np.eye(X.shape[0]) * 100000
+min_dist = np.min(D)
+print(max_dist, min_dist)
 # get all possible 2OPTs
 all_opt_doubles = get_possible_opt_doubles(min_dist, max_dist, gamma)
 print('all possible 2OPTs: ', all_opt_doubles)
@@ -55,8 +56,10 @@ for opt_double_idx in range(len(all_opt_doubles)):
         R_opt_double.append(R_m[opt_double_idx])
     R_opt_double = np.vstack(R_opt_double)
     C_distri, C_distri_idx, dist_to_C_distri = greedy_k_center(np.vstack((R_opt_double, T)), k)
-    opt_dist = np.max(dist_to_C_distri)
-    if min_opt is None or opt_dist < min_dist:
+    opt_all_dist = np.array([distance_to_center(x, C_distri)[0] for x in X])
+    opt_dist = np.max(opt_all_dist)
+    print('opt_dist: ', opt_dist)
+    if min_opt is None or opt_dist < min_opt:
         min_opt = opt_dist
         C_distri_opt = C_distri
         C_distri_idx_opt = C_distri_idx
