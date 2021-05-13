@@ -21,3 +21,19 @@ def even_split_data(X, s=2):
             P.append(X[start_idx:end_idx, :])
             start_idx = end_idx
     return P
+
+
+def get_possible_opt_doubles(min_dist, max_dist, gamma):
+    """
+    Generate a list of possible 2 opts.
+    :param min_dist: minimum dist between data points
+    :param max_dist: maximum dist between data points
+    :param gamma: approx ratio
+    :return: 2 * (1 + gamma)^{i} | min_dist <= (1 + gamma)^{i} <= max_dist
+    """
+    base = 1 + gamma
+    min_power = int(np.floor(np.log(min_dist, 1 + gamma)))
+    max_power = int(np.ceil(np.log(max_dist, 1 + gamma)))
+    powers = np.arange(min_power, max_power + 1, 1)
+    opt_vals = np.array([(1 + gamma) ** i for i in powers])
+    return 2 * opt_vals

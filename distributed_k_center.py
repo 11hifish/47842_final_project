@@ -3,6 +3,7 @@
 """
 import numpy as np
 from greedy_k_center import greedy_k_center, distance_to_center
+from utils import get_possible_opt_doubles
 import ray
 
 
@@ -22,17 +23,18 @@ def construct_tester(X, k, eps=1/2):
 
 
 @ray.remote
-def prune(X_local, T, opt_double):
+def prune(X_local, T, all_opt_doubles):
     """
     Prune data points on a local machine
     :param X_local: local samples, n x d
     :param T: tester
-    :param opt_double: 2OPT
-    :return: A set of remaining data points
+    :return: A list of set of remaining data points, and a list of opt doubles
     """
     all_dist = np.array([distance_to_center(x, T)[0] for x in X_local])
-    R_idx = np.where(all_dist > opt_double)[0]
-    R = X_local[R_idx]
-    return R
-
+    all_R = []
+    for opt_double in all_opt_doubles:
+        R_idx = np.where(all_dist > opt_double)[0]
+        R = X_local[R_idx]
+        all_R.append(R)
+    return all_R
 
