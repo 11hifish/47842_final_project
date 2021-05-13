@@ -17,6 +17,7 @@ parser.add_argument('--machines', type=int, default=5, help='Number of machines.
 parser.add_argument('--eps', type=float, default=0.5, help='Memory constraint.')
 parser.add_argument('--gamma', type=float, default=0.5, help='Approximation ratio to 2OPT.')
 parser.add_argument('--expno', type=int, default=1, help='Trial index.')
+parser.add_argument('--savefolder', type=str, default='results', help='Result folder.')
 args = parser.parse_args()
 
 num_machines = args.machines
@@ -25,6 +26,7 @@ eps = args.eps
 gamma = args.gamma
 data_name = args.data
 expno = args.expno
+save_folder = args.savefolder
 
 # get data
 # X = np.random.random(size=(100, 3))
@@ -85,7 +87,9 @@ print('baseline dist: {}'.format(opt_double))
 print('opt dist: {}'.format(min_opt))
 
 # save results
-with open('result_{}_no_{}_k_{}_m_{}.pkl'.format(data_name, expno, k, num_machines), 'wb') as f:
+with open(os.path.join(save_folder,
+                       'result_{}_no_{}_k_{}_m_{}.pkl'
+                       .format(data_name, expno, k, num_machines)), 'wb') as f:
     pickle.dump((C_baseline, C_baseline_idx, dist_to_C,
                  C_distri_opt, C_distri_idx_opt, dist_to_C_distri_opt,
                  all_opt_doubles), f)
