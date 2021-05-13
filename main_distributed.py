@@ -74,6 +74,6 @@ print('baseline dist: {}'.format(opt_double))
 print('opt dist: {}'.format(min_opt))
 
 # save results
-with open('result_k_{}_m_{}.pkl'.format(k, num_machines), 'wb') as f:
+with open('result_{}_k_{}_m_{}.pkl'.format(data_name, k, num_machines), 'wb') as f:
     pickle.dump((C_baseline, C_baseline_idx, dist_to_C,
                  C_distri_opt, C_distri_idx_opt, dist_to_C_distri_opt), f)
