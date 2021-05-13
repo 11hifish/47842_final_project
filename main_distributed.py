@@ -6,15 +6,19 @@ from utils import *
 from greedy_k_center import greedy_k_center, distance_to_center
 from scipy.spatial import distance_matrix
 import pickle
+import os
 
 
 num_machines = 5
 k = 3
 eps = 1/2
 gamma = 1/2
+data_name = 'SCADI'
 
 # get data
-X = np.random.random(size=(100, 3))
+# X = np.random.random(size=(100, 3))
+with open(os.path.join('data', data_name + '.pkl'), 'rb') as f:
+    X, y = pickle.load(f)
 # partition data
 P = even_split_data(X, num_machines)
 
