@@ -87,6 +87,8 @@ print('baseline dist: {}'.format(opt_double))
 print('opt dist: {}'.format(min_opt))
 
 # save results
+if not os.path.isdir(save_folder):
+    os.mkdir(save_folder)
 with open(os.path.join(save_folder,
                        'result_{}_no_{}_k_{}_m_{}.pkl'
                        .format(data_name, expno, k, num_machines)), 'wb') as f:
