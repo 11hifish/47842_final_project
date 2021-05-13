@@ -7,13 +7,24 @@ from greedy_k_center import greedy_k_center, distance_to_center
 from scipy.spatial import distance_matrix
 import pickle
 import os
+import argparse
 
 
-num_machines = 5
-k = 3
-eps = 1/2
-gamma = 1/2
-data_name = 'SCADI'
+parser = argparse.ArgumentParser(description='Distributed protocol.')
+parser.add_argument('--data', type=str, default='SCADI', help='Dataset.')
+parser.add_argument('--k', type=int, default=7, help='Number of clusters.')
+parser.add_argument('--machines', type=int, default=5, help='Number of machines.')
+parser.add_argument('--eps', type=float, default=0.5, help='Memory constraint.')
+parser.add_argument('--gamma', type=float, default=0.5, help='Approximation ratio to 2OPT.')
+parser.add_argument('--expno', type=int, default=1, help='Trial index.')
+args = parser.parse_args()
+
+num_machines = args.machines
+k = args.k
+eps = args.eps
+gamma = args.gama
+data_name = args.data
+expno = args.expno
 
 # get data
 # X = np.random.random(size=(100, 3))
@@ -74,6 +85,7 @@ print('baseline dist: {}'.format(opt_double))
 print('opt dist: {}'.format(min_opt))
 
 # save results
-with open('result_{}_k_{}_m_{}.pkl'.format(data_name, k, num_machines), 'wb') as f:
+with open('result_{}_no_{}_k_{}_m_{}.pkl'.format(data_name, expno, k, num_machines), 'wb') as f:
     pickle.dump((C_baseline, C_baseline_idx, dist_to_C,
-                 C_distri_opt, C_distri_idx_opt, dist_to_C_distri_opt), f)
+                 C_distri_opt, C_distri_idx_opt, dist_to_C_distri_opt,
+                 all_opt_doubles), f)
