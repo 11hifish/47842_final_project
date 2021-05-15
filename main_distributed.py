@@ -9,10 +9,9 @@ import pickle
 import os
 import argparse
 
-
 parser = argparse.ArgumentParser(description='Distributed protocol.')
-parser.add_argument('--data', type=str, default='SCADI', help='Dataset.')
-parser.add_argument('--k', type=int, default=7, help='Number of clusters.')
+parser.add_argument('--data', type=str, default='religion', help='Dataset.')
+parser.add_argument('--k', type=int, default=8, help='Number of clusters.')
 parser.add_argument('--machines', type=int, default=5, help='Number of machines.')
 parser.add_argument('--eps', type=float, default=0.5, help='Memory constraint.')
 parser.add_argument('--gamma', type=float, default=0.5, help='Approximation ratio to 2OPT.')
@@ -40,10 +39,10 @@ D = distance_matrix(X, X)
 max_dist = np.max(D)
 D = D + np.eye(X.shape[0]) * 100000
 min_dist = np.min(D)
-print(max_dist, min_dist)
+#print(max_dist, min_dist)
 # get all possible 2OPTs
 all_opt_doubles = get_possible_opt_doubles(min_dist, max_dist, gamma)
-print('all possible 2OPTs: ', all_opt_doubles)
+#print('all possible 2OPTs: ', all_opt_doubles)
 
 # greedy baseline and get 2 OPT
 C_baseline, C_baseline_idx, dist_to_C = greedy_k_center(X, k)
@@ -61,7 +60,7 @@ while len(futures) > 0:
     R_lists.append(R_l)
     futures = rest
 
-print('length of all R: {}'.format(len(R_lists)))  # should be # machines
+#print('length of all R: {}'.format(len(R_lists)))  # should be # machines
 
 min_opt = None
 C_distri_opt = None
@@ -75,7 +74,7 @@ for opt_double_idx in range(len(all_opt_doubles)):
     C_distri, C_distri_idx, dist_to_C_distri = greedy_k_center(np.vstack((R_opt_double, T)), k)
     opt_all_dist = np.array([distance_to_center(x, C_distri)[0] for x in X])
     opt_dist = np.max(opt_all_dist)
-    print('opt_dist: ', opt_dist)
+    #print('opt_dist: ', opt_dist)
     if min_opt is None or opt_dist < min_opt:
         min_opt = opt_dist
         C_distri_opt = C_distri
@@ -95,3 +94,6 @@ with open(os.path.join(save_folder,
     pickle.dump((C_baseline, C_baseline_idx, dist_to_C,
                  C_distri_opt, C_distri_idx_opt, dist_to_C_distri_opt,
                  all_opt_doubles), f)
+
+with open("{}.txt".format(data_name), "a") as text_file:
+    text_file.write(str(opt_double)+","+str(min_opt)+"\n")
